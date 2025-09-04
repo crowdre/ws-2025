@@ -233,7 +233,7 @@
           <h4 class="modal-title" id="galleryModalLabel">Workshop Photo</h4>
         </div>
         <div class="modal-body text-center">
-          <img id="modalImage" src="" alt="Workshop Photo" class="img-responsive" style="max-width: 100%; max-height: 70vh;">
+          <img id="modalImage" src="" alt="Workshop Photo" class="img-responsive" style="max-width: 100%; max-height: 70vh; margin: 0 auto;">
         </div>
       </div>
     </div>
@@ -257,10 +257,23 @@
   <!-- Gallery Modal JavaScript -->
   <script>
     $(document).ready(function() {
-      $('.thumbnail').click(function() {
+      $('.thumbnail[data-image]').click(function(e) {
+        e.preventDefault();
         var imageSrc = $(this).data('image');
+        console.log('Clicked image:', imageSrc); // Debug log
+        
+        // Set the image source
         $('#modalImage').attr('src', imageSrc);
+        
+        // Show the modal
         $('#galleryModal').modal('show');
+        
+        // Force image load
+        $('#modalImage').on('load', function() {
+          console.log('Image loaded successfully');
+        }).on('error', function() {
+          console.log('Error loading image:', imageSrc);
+        });
       });
     });
   </script>
