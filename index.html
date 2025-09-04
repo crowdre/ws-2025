@@ -223,19 +223,10 @@
   </div>
 
   <!-- Gallery Modal -->
-  <div class="modal fade" id="galleryModal" tabindex="-1" role="dialog" aria-labelledby="galleryModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="galleryModalLabel">Workshop Photo</h4>
-        </div>
-        <div class="modal-body text-center">
-          <img id="modalImage" src="" alt="Workshop Photo" class="img-responsive" style="max-width: 100%; max-height: 70vh; margin: 0 auto;">
-        </div>
-      </div>
+  <div id="galleryModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);">
+    <div style="position: relative; margin: auto; padding: 20px; width: 90%; max-width: 800px; top: 50%; transform: translateY(-50%);">
+      <span id="closeModal" style="position: absolute; top: 10px; right: 20px; color: white; font-size: 30px; font-weight: bold; cursor: pointer;">&times;</span>
+      <img id="modalImage" src="" alt="Workshop Photo" style="width: 100%; height: auto; max-height: 80vh; object-fit: contain;">
     </div>
   </div>
 
@@ -257,24 +248,44 @@
   <!-- Gallery Modal JavaScript -->
   <script>
     $(document).ready(function() {
+      // Handle thumbnail clicks
       $('.thumbnail[data-image]').click(function(e) {
         e.preventDefault();
+        
         var imageSrc = $(this).data('image');
-        console.log('Clicked image:', imageSrc); // Debug log
+        console.log('Clicked image:', imageSrc);
         
         // Set the image source
         $('#modalImage').attr('src', imageSrc);
         
         // Show the modal
-        $('#galleryModal').modal('show');
+        $('#galleryModal').show();
         
-        // Force image load
-        $('#modalImage').on('load', function() {
-          console.log('Image loaded successfully');
-        }).on('error', function() {
-          console.log('Error loading image:', imageSrc);
-        });
+        console.log('Modal should be showing now');
       });
+      
+      // Handle close button click
+      $('#closeModal').click(function() {
+        $('#galleryModal').hide();
+      });
+      
+      // Handle clicking outside the image to close
+      $('#galleryModal').click(function(e) {
+        if (e.target === this) {
+          $('#galleryModal').hide();
+        }
+      });
+      
+      // Handle escape key
+      $(document).keyup(function(e) {
+        if (e.keyCode === 27) { // Escape key
+          $('#galleryModal').hide();
+        }
+      });
+      
+      // Debug: Check if elements exist
+      console.log('Gallery thumbnails found:', $('.thumbnail[data-image]').length);
+      console.log('Modal element exists:', $('#galleryModal').length);
     });
   </script>
 </body>
