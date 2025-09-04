@@ -247,45 +247,74 @@
 
   <!-- Gallery Modal JavaScript -->
   <script>
-    $(document).ready(function() {
-      // Handle thumbnail clicks
-      $('.thumbnail[data-image]').click(function(e) {
-        e.preventDefault();
-        
-        var imageSrc = $(this).data('image');
-        console.log('Clicked image:', imageSrc);
-        
-        // Set the image source
-        $('#modalImage').attr('src', imageSrc);
-        
-        // Show the modal
-        $('#galleryModal').show();
-        
-        console.log('Modal should be showing now');
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, setting up gallery...');
+      
+      // Get all thumbnail elements
+      var thumbnails = document.querySelectorAll('.thumbnail[data-image]');
+      console.log('Found thumbnails:', thumbnails.length);
+      
+      // Add click event to each thumbnail
+      thumbnails.forEach(function(thumbnail, index) {
+        console.log('Setting up thumbnail', index);
+        thumbnail.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          var imageSrc = this.getAttribute('data-image');
+          console.log('Clicked image:', imageSrc);
+          
+          // Set the image source
+          var modalImage = document.getElementById('modalImage');
+          if (modalImage) {
+            modalImage.src = imageSrc;
+            console.log('Set image src to:', imageSrc);
+          } else {
+            console.log('Modal image element not found!');
+          }
+          
+          // Show the modal
+          var modal = document.getElementById('galleryModal');
+          if (modal) {
+            modal.style.display = 'block';
+            console.log('Modal should be visible now');
+          } else {
+            console.log('Modal element not found!');
+          }
+        });
       });
       
-      // Handle close button click
-      $('#closeModal').click(function() {
-        $('#galleryModal').hide();
-      });
+      // Handle close button
+      var closeBtn = document.getElementById('closeModal');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          var modal = document.getElementById('galleryModal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
+        });
+      }
       
-      // Handle clicking outside the image to close
-      $('#galleryModal').click(function(e) {
-        if (e.target === this) {
-          $('#galleryModal').hide();
-        }
-      });
+      // Handle clicking outside to close
+      var modal = document.getElementById('galleryModal');
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            this.style.display = 'none';
+          }
+        });
+      }
       
       // Handle escape key
-      $(document).keyup(function(e) {
+      document.addEventListener('keyup', function(e) {
         if (e.keyCode === 27) { // Escape key
-          $('#galleryModal').hide();
+          var modal = document.getElementById('galleryModal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
         }
       });
-      
-      // Debug: Check if elements exist
-      console.log('Gallery thumbnails found:', $('.thumbnail[data-image]').length);
-      console.log('Modal element exists:', $('#galleryModal').length);
     });
   </script>
 </body>
